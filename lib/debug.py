@@ -1,9 +1,23 @@
-#!/usr/bin/env python3
+from models import session, Company, Dev, Freebie
 
-from sqlalchemy import create_engine
+def test_relationships():
+    # Check if database has data
+    if session.query(Company).count() == 0:
+        print("Database is empty. Please run seed.py first.")
+        return
 
-from models import Company, Dev
+    # Test relationships
+    company = session.query(Company).first()
+    print(f"Company: {company.name}")
+    print("Freebies:")
+    for freebie in company.freebies:
+        print(f"- {freebie.item_name} owned by {freebie.dev.name}")
+    
+    dev = session.query(Dev).first()
+    print(f"\nDev: {dev.name}")
+    print("Companies:")
+    for company in dev.companies:
+        print(f"- {company.name}")
 
 if __name__ == '__main__':
-    engine = create_engine('sqlite:///freebies.db')
-    import ipdb; ipdb.set_trace()
+    test_relationships()
