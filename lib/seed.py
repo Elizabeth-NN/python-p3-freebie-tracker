@@ -1,37 +1,42 @@
-from models import session, Company, Dev, Freebie
+#!/usr/bin/env python3
 
-def seed_data():
-    # Clear existing data
-    session.query(Freebie).delete()
-    session.query(Company).delete()
-    session.query(Dev).delete()
-    session.commit()
+# lib/seed.py
 
-    # Create companies
-    google = Company(name="Google", founding_year=1998)
-    microsoft = Company(name="Microsoft", founding_year=1975)
-    apple = Company(name="Apple", founding_year=1976)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from models import Base, Company, Dev, Freebie
 
-    # Create devs
-    alice = Dev(name="Alice")
-    bob = Dev(name="Bob")
-    charlie = Dev(name="Charlie")
+# Create an engine and session
+engine = create_engine('sqlite:///freebies.db')
+Base.metadata.create_all(engine)
+Session = sessionmaker(bind=engine)
+session = Session()
 
-    # Add all to session
-    session.add_all([google, microsoft, apple, alice, bob, charlie])
-    session.commit()
+# Clear existing data
+session.query(Freebie).delete()
+session.query(Dev).delete()
+session.query(Company).delete()
 
-    # Create freebies
-    freebies = [
-        Freebie(item_name="T-shirt", value=10, dev=alice, company=google),
-        Freebie(item_name="Sticker", value=2, dev=alice, company=microsoft),
-        Freebie(item_name="Mug", value=5, dev=bob, company=google),
-        Freebie(item_name="Laptop", value=1000, dev=charlie, company=apple),
-        Freebie(item_name="Hat", value=8, dev=charlie, company=google)
-    ]
-    
-    session.add_all(freebies)
-    session.commit()
+# Create sample companies
+company1 = Company(name="TechCorp", founding_year=1995)
+company2 = Company(name="InnovateInc", founding_year=2005)
+session.add_all([company1, company2])
 
-if __name__ == '__main__':
-    seed_data()
+# Create sample devs
+dev1 = Dev(name="Alice")
+dev2 = Dev(name="Bob")
+session.add_all([dev1, dev2])
+
+# Commit the companies and devs to get their IDs
+session.commit()
+
+# Create sample freebies
+freebie1 = Freebie(item_name="T-Shirt", value=10, company=company1, dev=dev1)
+freebie2 = Freebie(item_name="Mug", value=5, company=company1, dev=dev2)
+freebie3 = Freebie(item_name="Sticker", value=2, company=company2, dev=dev1)
+session.add_all([freebie1, freebie2, freebie3])
+
+# Commit the freebies
+session.commit()
+
+print("Database seeded successfully!")
