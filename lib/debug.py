@@ -1,5 +1,3 @@
-
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Company, Dev, Freebie
@@ -37,41 +35,43 @@ if __name__ == '__main__':
 
     # Commit the freebies
     session.commit()
+    print("Testing db created")
 
-    print("Database reset and seeded successfully!")
-
-    # Start an ipdb session for interactive debugging
-    import ipdb; ipdb.set_trace()
+    # Start an ipdb session for debugging
+    # import ipdb; ipdb.set_trace()
 
    
 
     # Test Freebie methods
-    # freebie = session.query(Freebie).first()
-    # print(freebie.dev)  # Should return a Dev instance (e.g., Nic)
-    # print(freebie.company)  # Should return a Company instance (e.g., Maji-Mazuri)
-    # print(freebie.print_details())  # Should print "Nic owns a Hat from Maji-Mazuri" with colors
+    print("******Testing Freebie methods******")
+    freebie = session.query(Freebie).first()
+    print(freebie.dev)  # Should return a Dev instance (e.g., Nic)
+    print(freebie.company)  # Should return a Company instance (e.g., Maji-Mazuri)
+    print(freebie.print_details())  # Should print "Nic owns a Hat from Maji-Mazuri" with colors
 
     # Test Company methods
-    # company = session.query(Company).first()
-    # print(company.freebies)  # Should return a list of Freebie instances
-    # print(company.devs)  # Should return a list of Dev instances (Nic, Brian mwas)
-    # dev = session.query(Dev).filter_by(name="Brian mwas").first()
-    # new_freebie = company.give_freebie(dev, "Hat", 15)
-    # session.add(new_freebie)
-    # session.commit()
-    # print(new_freebie.print_details())  # Should print "Bob owns a Hat from Maji-Mazuri"
-    # oldest = Company.oldest_company(session)
-    # print(oldest.name)  # Should print "Maji-Mazuri"
+    print("\n******Testing Company methods******")
+    company = session.query(Company).first()
+    print(company.freebies)  # Should return a list of Freebie instances
+    print(company.devs)  # Should return a list of Dev instances (Nic, Brian mwas)
+    dev = session.query(Dev).filter_by(name="Brian mwas").first()
+    new_freebie = company.give_freebie(dev, "Hat", 15)
+    session.add(new_freebie)
+    session.commit()
+    print(new_freebie.print_details())  # Should print "Bob owns a Hat from Maji-Mazuri"
+    oldest = Company.oldest_company(session)
+    print(oldest.name)  # Should print "Maji-Mazuri"
 
     # Test Dev methods
-    # dev = session.query(Dev).filter_by(name="Nic").first()
-    # print(dev.freebies)  # Should return a list of Freebie instances
-    # print(dev.companies)  # Should return a list of Company instances (Maji-Mazuri, Tailoring)
-    # print(dev.received_one("Hat"))  # Should return True
-    # print(dev.received_one("Pen"))  # Should return False
-    # freebie = next(f for f in dev.freebies if f.item_name == "Slippers")  # Explicitly select the Slippers
-    # other_dev = session.query(Dev).filter_by(name="Brian mwas").first()
-    # dev.give_away(other_dev, freebie)
-    # session.commit()
-    # print(freebie.dev.name)  # Should print "Brian mwas"
-    # print(dev.total_freebie_value())  # Should print 10 (value of Hat, since Slippers was given away)
+    print("\n*******Testing Dev methods********")
+    dev = session.query(Dev).filter_by(name="Nic").first()
+    print(dev.freebies)  # Should return a list of Freebie instances
+    print(dev.companies)  # Should return a list of Company instances (Maji-Mazuri, Tailoring)
+    print(dev.received_one("Hat"))  # Should return True
+    print(dev.received_one("Pen"))  # Should return False
+    freebie = next(f for f in dev.freebies if f.item_name == "Slippers")  # Explicitly select the Slippers
+    other_dev = session.query(Dev).filter_by(name="Brian mwas").first()
+    dev.give_away(other_dev, freebie)
+    session.commit()
+    print(freebie.dev.name)  # Should print "Brian mwas"
+    print(dev.total_freebie_value())  # Should print 10 (value of Hat, since Slippers was given away)

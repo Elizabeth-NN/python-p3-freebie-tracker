@@ -1,5 +1,3 @@
-
-
 from sqlalchemy import ForeignKey, Column, Integer, String, MetaData
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
@@ -116,6 +114,9 @@ class Freebie(Base):
         'Company',
         back_populates='freebies'
     )
+
+    def __repr__(self):
+        return f'<Item {self.item_name}>'
 
     def print_details(self):
        
